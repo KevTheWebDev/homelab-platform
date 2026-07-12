@@ -16,6 +16,7 @@ Current storage choices:
 - Namespace: `longhorn-system`
 - Default replica count: `2`
 - Default reclaim policy: `Retain`
+- Pre-upgrade checker job: disabled for Argo CD/GitOps installs
 - Longhorn UI exposure: `ClusterIP` only
 
 ## Why Longhorn

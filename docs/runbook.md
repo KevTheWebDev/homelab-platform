@@ -72,6 +72,14 @@ kubectl get pods -n longhorn-system
 kubectl get storageclass
 ```
 
+If Argo CD gets stuck waiting for `longhorn-pre-upgrade`, remove the stuck hook and refresh the application:
+
+```powershell
+kubectl delete job longhorn-pre-upgrade -n longhorn-system --ignore-not-found
+kubectl patch application longhorn -n argocd --type merge -p '{"operation":null}'
+kubectl annotate application longhorn -n argocd argocd.argoproj.io/refresh=hard --overwrite
+```
+
 ## Access Longhorn UI
 
 The Longhorn UI is intentionally not exposed by MetalLB. Use a local port-forward:

@@ -23,6 +23,9 @@ spec:
           defaultClassReplicaCount: 2
           reclaimPolicy: Retain
 
+        preUpgradeChecker:
+          jobEnabled: false
+
         service:
           ui:
             type: ClusterIP
