@@ -1,0 +1,14 @@
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# Local kubeconfigs and secrets
+kubeconfig*
+*.kubeconfig
+secrets/
+*.secret.yaml
+
+# Editor files
+.vscode/
+.idea/
