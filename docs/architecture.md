@@ -9,7 +9,7 @@ Physical mini PCs
   -> Proxmox
     -> Ubuntu Server VMs
       -> K3s Kubernetes
-        -> MetalLB, Traefik, Argo CD, Prometheus, Grafana, Longhorn
+        -> MetalLB, Traefik Ingress, Argo CD, Prometheus, Grafana, Longhorn
           -> Homelab apps
 ```
 
@@ -40,8 +40,20 @@ Edit manifests
 Monitoring is provided by the `kube-prometheus-stack` Helm chart, managed by Argo CD as the `monitoring` application.
 
 - Prometheus collects Kubernetes and node metrics.
-- Grafana provides dashboards at `http://192.168.0.204`.
+- Grafana provides dashboards at `http://grafana.homelab.local`.
 - Grafana credentials are stored in a Kubernetes Secret named `grafana-admin` in the `monitoring` namespace. The secret is intentionally not committed to Git.
+
+## Ingress
+
+Traefik provides host-based HTTP routing for homelab services.
+
+The first ingress phase keeps existing LoadBalancer services available while also adding routes for:
+
+- `homepage.homelab.local`
+- `nginx.homelab.local`
+- `grafana.homelab.local`
+
+Once those routes are verified, most browser-based apps can move behind a shared ingress IP instead of each app consuming its own MetalLB address.
 
 ## Storage
 
@@ -55,5 +67,8 @@ Persistent storage is provided by Longhorn, managed by Argo CD as the `longhorn`
 
 Planned platform additions:
 
-- Pi-hole for homelab DNS/ad-blocking.
-- Additional internal apps exposed through MetalLB and tracked in Homepage.
+- Homarr as an alternate dashboard experience.
+- Uptime Kuma for service uptime checks and status visibility.
+- Network monitoring dashboards in Grafana.
+- TLS certificates for ingress-hosted apps.
+- Longhorn backup targets for persistent volumes.

@@ -24,6 +24,14 @@ spec:
             type: LoadBalancer
             loadBalancerIP: 192.168.0.204
             externalTrafficPolicy: Local
+          ingress:
+            enabled: true
+            ingressClassName: traefik
+            annotations:
+              traefik.ingress.kubernetes.io/router.entrypoints: web
+            hosts:
+              - grafana.homelab.local
+            path: /
           persistence:
             enabled: false
 

@@ -42,8 +42,26 @@ kubectl get svc -n monitoring
 Grafana should be available at:
 
 ```text
-http://192.168.0.204
+http://grafana.homelab.local
 ```
+
+## Check ingress
+
+```powershell
+kubectl get svc -n kube-system traefik
+kubectl get ingress -A
+```
+
+After Pi-hole DNS records point ingress-hosted apps to Traefik's external IP, test from a client:
+
+```powershell
+nslookup homepage.homelab.local
+curl.exe -I http://homepage.homelab.local
+curl.exe -I http://nginx.homelab.local
+curl.exe -I http://grafana.homelab.local
+```
+
+If an ingress route fails but the old LoadBalancer IP still works, leave the old service in place and troubleshoot Traefik before converting the service to ClusterIP.
 
 ## Prepare nodes for Longhorn
 
@@ -131,9 +149,9 @@ In Pi-hole, go to **Local DNS > DNS Records** and add:
 | Domain | IP |
 |---|---:|
 | `argocd.homelab.local` | 192.168.0.201 |
-| `nginx.homelab.local` | 192.168.0.202 |
-| `homepage.homelab.local` | 192.168.0.203 |
-| `grafana.homelab.local` | 192.168.0.204 |
+| `nginx.homelab.local` | Traefik external IP |
+| `homepage.homelab.local` | Traefik external IP |
+| `grafana.homelab.local` | Traefik external IP |
 | `pihole.homelab.local` | 192.168.0.205 |
 
 Then test from a client using Pi-hole DNS:
