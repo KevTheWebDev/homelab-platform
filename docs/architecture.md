@@ -9,7 +9,7 @@ Physical mini PCs
   -> Proxmox
     -> Ubuntu Server VMs
       -> K3s Kubernetes
-        -> MetalLB, Traefik, Argo CD
+        -> MetalLB, Traefik, Argo CD, Prometheus, Grafana
           -> Homelab apps
 ```
 
@@ -34,3 +34,19 @@ Edit manifests
   -> Argo CD syncs
   -> Kubernetes updates the cluster
 ```
+
+## Observability
+
+Monitoring is provided by the `kube-prometheus-stack` Helm chart, managed by Argo CD as the `monitoring` application.
+
+- Prometheus collects Kubernetes and node metrics.
+- Grafana provides dashboards at `http://192.168.0.204`.
+- Grafana credentials are stored in a Kubernetes Secret named `grafana-admin` in the `monitoring` namespace. The secret is intentionally not committed to Git.
+
+## Future services
+
+Planned platform additions:
+
+- Persistent storage for stateful workloads.
+- Pi-hole for homelab DNS/ad-blocking.
+- Additional internal apps exposed through MetalLB and tracked in Homepage.

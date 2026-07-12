@@ -44,6 +44,10 @@ data:
             href: http://192.168.0.203
             description: Homelab dashboard
             icon: homepage.png
+        - Grafana:
+            href: http://192.168.0.204
+            description: Cluster metrics and dashboards
+            icon: grafana.png
 
     - Documentation:
         - Architecture:
@@ -73,6 +77,12 @@ data:
         - MetalLB:
             - abbr: MLB
               href: https://metallb.io/
+        - Prometheus:
+            - abbr: Prom
+              href: https://prometheus.io/docs/
+        - Grafana:
+            - abbr: Graf
+              href: https://grafana.com/docs/
 
   widgets.yaml: |
     - resources:

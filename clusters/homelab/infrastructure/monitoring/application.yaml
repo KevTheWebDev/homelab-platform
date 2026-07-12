@@ -1,0 +1,61 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: ">=0.0.0"
+    helm:
+      releaseName: kube-prometheus-stack
+      values: |
+        grafana:
+          enabled: true
+          admin:
+            existingSecret: grafana-admin
+            userKey: admin-user
+            passwordKey: admin-password
+          nodeSelector:
+            kubernetes.io/hostname: k3s-04
+          service:
+            type: LoadBalancer
+            loadBalancerIP: 192.168.0.204
+            externalTrafficPolicy: Local
+          persistence:
+            enabled: false
+
+        prometheus:
+          prometheusSpec:
+            retention: 7d
+            retentionSize: 8GB
+            replicas: 1
+            nodeSelector:
+              kubernetes.io/hostname: k3s-04
+            storageSpec: {}
+
+        alertmanager:
+          alertmanagerSpec:
+            replicas: 1
+            nodeSelector:
+              kubernetes.io/hostname: k3s-04
+
+        kube-state-metrics:
+          nodeSelector:
+            kubernetes.io/hostname: k3s-04
+
+        prometheus-node-exporter:
+          tolerations:
+            - operator: Exists
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
