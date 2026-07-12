@@ -25,7 +25,7 @@ spec:
             - sh
             - -c
             - |
-              cp -R /config-src/* /app/config/
+              cp -L /config-src/* /app/config/
               mkdir -p /app/config/logs
           volumeMounts:
             - name: config-src
