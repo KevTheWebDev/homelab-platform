@@ -32,12 +32,18 @@ These addresses must remain outside the DHCP pool.
 
 ## Assigned LoadBalancer IPs
 
-| Service | IP | Purpose |
-|---|---:|---|
-| Argo CD | 192.168.0.200 | GitOps web UI |
-| Test Nginx | 192.168.0.202 | Test application |
-| Homepage | 192.168.0.203 | Homelab dashboard |
-| Grafana | 192.168.0.204 | Monitoring dashboards |
-| Pi-hole | 192.168.0.205 | DNS and ad blocking |
+| Service | IP | DNS name | Purpose |
+|---|---:|---|---|
+| Argo CD | 192.168.0.201 | `argocd.homelab.local` | GitOps web UI |
+| Test Nginx | 192.168.0.202 | `nginx.homelab.local` | Test application |
+| Homepage | 192.168.0.203 | `homepage.homelab.local` | Homelab dashboard |
+| Grafana | 192.168.0.204 | `grafana.homelab.local` | Monitoring dashboards |
+| Pi-hole | 192.168.0.205 | `pihole.homelab.local` | DNS and ad blocking |
 
 Future services should use an unused address from the MetalLB range.
+
+## Local DNS
+
+Pi-hole provides local DNS records for homelab services under `homelab.local`.
+
+These records make the platform easier to use while preserving the underlying MetalLB IP plan.

@@ -115,13 +115,32 @@ kubectl get pvc -n pihole
 Pi-hole should be available at:
 
 ```text
-http://192.168.0.205/admin
+http://pihole.homelab.local/admin
 ```
 
 Test DNS manually before changing router or client DNS settings:
 
 ```powershell
 nslookup example.com 192.168.0.205
+```
+
+## Configure local DNS records
+
+In Pi-hole, go to **Local DNS > DNS Records** and add:
+
+| Domain | IP |
+|---|---:|
+| `argocd.homelab.local` | 192.168.0.201 |
+| `nginx.homelab.local` | 192.168.0.202 |
+| `homepage.homelab.local` | 192.168.0.203 |
+| `grafana.homelab.local` | 192.168.0.204 |
+| `pihole.homelab.local` | 192.168.0.205 |
+
+Then test from a client using Pi-hole DNS:
+
+```powershell
+nslookup homepage.homelab.local
+nslookup grafana.homelab.local
 ```
 
 ## Access Argo CD

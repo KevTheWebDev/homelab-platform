@@ -23,7 +23,7 @@ data:
   services.yaml: |
     - Platform:
         - Argo CD:
-            href: https://192.168.0.200
+            href: https://argocd.homelab.local
             description: GitOps control plane
             icon: argo-cd.png
         - Proxmox pve1:
@@ -37,19 +37,19 @@ data:
 
     - Kubernetes:
         - Test Nginx:
-            href: http://192.168.0.202
+            href: http://nginx.homelab.local
             description: First GitOps-deployed test app
             icon: nginx.png
         - Homepage:
-            href: http://192.168.0.203
+            href: http://homepage.homelab.local
             description: Homelab dashboard
             icon: homepage.png
         - Grafana:
-            href: http://192.168.0.204
+            href: http://grafana.homelab.local
             description: Cluster metrics and dashboards
             icon: grafana.png
         - Pi-hole:
-            href: http://192.168.0.205/admin
+            href: http://pihole.homelab.local/admin
             description: Homelab DNS and ad blocking
             icon: pi-hole.png
         - Storage Docs:
