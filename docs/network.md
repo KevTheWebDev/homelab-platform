@@ -38,5 +38,6 @@ These addresses must remain outside the DHCP pool.
 | Test Nginx | 192.168.0.202 | Test application |
 | Homepage | 192.168.0.203 | Homelab dashboard |
 | Grafana | 192.168.0.204 | Monitoring dashboards |
+| Pi-hole | 192.168.0.205 | DNS and ad blocking |
 
-Future services, including Pi-hole, should use an unused address from the MetalLB range.
+Future services should use an unused address from the MetalLB range.

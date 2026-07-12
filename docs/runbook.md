@@ -94,6 +94,36 @@ Then open:
 http://localhost:8080
 ```
 
+## Create Pi-hole web password secret
+
+Pi-hole credentials are not committed to Git. Create the secret before syncing the Pi-hole application:
+
+```powershell
+kubectl create namespace pihole
+kubectl create secret generic pihole-web-password -n pihole --from-literal=password='<CHOOSE_A_STRONG_PASSWORD>'
+```
+
+## Check Pi-hole
+
+```powershell
+kubectl get application pihole -n argocd
+kubectl get pods -n pihole
+kubectl get svc -n pihole
+kubectl get pvc -n pihole
+```
+
+Pi-hole should be available at:
+
+```text
+http://192.168.0.205/admin
+```
+
+Test DNS manually before changing router or client DNS settings:
+
+```powershell
+nslookup example.com 192.168.0.205
+```
+
 ## Access Argo CD
 
 Open the Argo CD LoadBalancer IP in a browser:

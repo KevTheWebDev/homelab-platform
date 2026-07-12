@@ -48,6 +48,10 @@ data:
             href: http://192.168.0.204
             description: Cluster metrics and dashboards
             icon: grafana.png
+        - Pi-hole:
+            href: http://192.168.0.205/admin
+            description: Homelab DNS and ad blocking
+            icon: pi-hole.png
         - Storage Docs:
             href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/storage.md
             description: Longhorn storage plan
@@ -65,6 +69,10 @@ data:
         - Runbook:
             href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/runbook.md
             description: Operational commands
+            icon: github.png
+        - Pi-hole Docs:
+            href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/pihole.md
+            description: DNS service notes
             icon: github.png
 
   bookmarks.yaml: |
@@ -90,6 +98,9 @@ data:
         - Longhorn:
             - abbr: LH
               href: https://longhorn.io/docs/
+        - Pi-hole:
+            - abbr: DNS
+              href: https://docs.pi-hole.net/
 
   widgets.yaml: |
     - resources:
