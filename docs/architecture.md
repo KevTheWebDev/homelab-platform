@@ -47,13 +47,13 @@ Monitoring is provided by the `kube-prometheus-stack` Helm chart, managed by Arg
 
 Traefik provides host-based HTTP routing for homelab services.
 
-The first ingress phase keeps existing LoadBalancer services available while also adding routes for:
+Ingress routes currently include:
 
 - `homepage.homelab.local`
 - `nginx.homelab.local`
 - `grafana.homelab.local`
 
-Once those routes are verified, most browser-based apps can move behind a shared ingress IP instead of each app consuming its own MetalLB address.
+Most browser-based apps use internal ClusterIP services behind Traefik instead of consuming their own MetalLB addresses.
 
 ## Storage
 

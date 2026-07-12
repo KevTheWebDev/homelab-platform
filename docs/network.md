@@ -34,10 +34,8 @@ These addresses must remain outside the DHCP pool.
 
 | Service | IP | DNS name | Purpose |
 |---|---:|---|---|
+| Traefik Ingress | 192.168.0.200 | shared ingress IP | Host-based HTTP routing |
 | Argo CD | 192.168.0.201 | `argocd.homelab.local` | GitOps web UI |
-| Test Nginx | 192.168.0.202 | `nginx.homelab.local` | Test application |
-| Homepage | 192.168.0.203 | `homepage.homelab.local` | Homelab dashboard |
-| Grafana | 192.168.0.204 | `grafana.homelab.local` | Monitoring dashboards |
 | Pi-hole | 192.168.0.205 | `pihole.homelab.local` | DNS and ad blocking |
 
 Future services should use an unused address from the MetalLB range.
@@ -46,11 +44,7 @@ Future services should use an unused address from the MetalLB range.
 
 Traefik is the cluster ingress controller included with K3s.
 
-Ingress is being introduced in phases:
-
-1. Keep existing per-app LoadBalancer services in place as a rollback path.
-2. Add host-based routes through Traefik.
-3. After routes are verified, move most HTTP apps behind one shared ingress IP.
+Most browser-based apps are exposed through Traefik on `192.168.0.200`.
 
 Pi-hole should keep its dedicated LoadBalancer IP because it serves DNS on port 53.
 
@@ -62,7 +56,7 @@ Check the current Traefik ingress IP with:
 kubectl get svc -n kube-system traefik
 ```
 
-During ingress testing, point these Pi-hole DNS records to Traefik's external IP:
+Point these Pi-hole DNS records to Traefik's external IP:
 
 | DNS name | Routed service |
 |---|---|

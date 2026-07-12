@@ -6,8 +6,7 @@ metadata:
   labels:
     app: test-nginx
 spec:
-  type: LoadBalancer
-  externalTrafficPolicy: Local
+  type: ClusterIP
   selector:
     app: test-nginx
   ports:

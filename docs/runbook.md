@@ -61,7 +61,14 @@ curl.exe -I http://nginx.homelab.local
 curl.exe -I http://grafana.homelab.local
 ```
 
-If an ingress route fails but the old LoadBalancer IP still works, leave the old service in place and troubleshoot Traefik before converting the service to ClusterIP.
+If an ingress route fails, first verify Traefik's LoadBalancer IP, service policy, and endpoints before changing individual applications.
+
+Traefik should use `externalTrafficPolicy: Local` in this environment. That setting is managed by the `traefik-config` Argo CD application.
+
+```powershell
+kubectl get application traefik-config -n argocd
+kubectl describe svc -n kube-system traefik
+```
 
 ## Prepare nodes for Longhorn
 
