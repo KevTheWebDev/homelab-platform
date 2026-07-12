@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: longhorn
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://charts.longhorn.io
+    chart: longhorn
+    targetRevision: 1.12.0
+    helm:
+      releaseName: longhorn
+      values: |
+        defaultSettings:
+          defaultReplicaCount: 2
+          replicaAutoBalance: best-effort
+          storageReservedPercentageForDefaultDisk: 20
+          storageMinimalAvailablePercentage: 15
+
+        persistence:
+          defaultClass: false
+          defaultClassReplicaCount: 2
+          reclaimPolicy: Retain
+
+        service:
+          ui:
+            type: ClusterIP
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: longhorn-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

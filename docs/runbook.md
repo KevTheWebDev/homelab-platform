@@ -45,6 +45,47 @@ Grafana should be available at:
 http://192.168.0.204
 ```
 
+## Prepare nodes for Longhorn
+
+Run this before syncing the Longhorn application. Longhorn requires iSCSI support on K3s nodes, and `nfs-common` prepares the nodes for future RWX volumes and backups.
+
+```powershell
+$nodes = @(
+  "192.168.0.121",
+  "192.168.0.122",
+  "192.168.0.123",
+  "192.168.0.124",
+  "192.168.0.125",
+  "192.168.0.126"
+)
+
+foreach ($node in $nodes) {
+  ssh kevin@$node "sudo apt update && sudo apt install -y open-iscsi nfs-common cryptsetup dmsetup && sudo systemctl enable --now iscsid"
+}
+```
+
+## Check Longhorn
+
+```powershell
+kubectl get application longhorn -n argocd
+kubectl get pods -n longhorn-system
+kubectl get storageclass
+```
+
+## Access Longhorn UI
+
+The Longhorn UI is intentionally not exposed by MetalLB. Use a local port-forward:
+
+```powershell
+kubectl -n longhorn-system port-forward svc/longhorn-frontend 8080:80
+```
+
+Then open:
+
+```text
+http://localhost:8080
+```
+
 ## Access Argo CD
 
 Open the Argo CD LoadBalancer IP in a browser:

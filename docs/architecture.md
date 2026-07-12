@@ -9,7 +9,7 @@ Physical mini PCs
   -> Proxmox
     -> Ubuntu Server VMs
       -> K3s Kubernetes
-        -> MetalLB, Traefik, Argo CD, Prometheus, Grafana
+        -> MetalLB, Traefik, Argo CD, Prometheus, Grafana, Longhorn
           -> Homelab apps
 ```
 
@@ -43,10 +43,17 @@ Monitoring is provided by the `kube-prometheus-stack` Helm chart, managed by Arg
 - Grafana provides dashboards at `http://192.168.0.204`.
 - Grafana credentials are stored in a Kubernetes Secret named `grafana-admin` in the `monitoring` namespace. The secret is intentionally not committed to Git.
 
+## Storage
+
+Persistent storage is provided by Longhorn, managed by Argo CD as the `longhorn` application.
+
+- Longhorn provides replicated Kubernetes volumes for stateful apps.
+- The Longhorn UI is kept internal-only because it does not include authentication by default.
+- The default Longhorn replica count is set to `2` to balance resilience with the cluster's limited local storage.
+
 ## Future services
 
 Planned platform additions:
 
-- Persistent storage for stateful workloads.
 - Pi-hole for homelab DNS/ad-blocking.
 - Additional internal apps exposed through MetalLB and tracked in Homepage.

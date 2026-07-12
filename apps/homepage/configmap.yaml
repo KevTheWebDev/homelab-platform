@@ -48,6 +48,10 @@ data:
             href: http://192.168.0.204
             description: Cluster metrics and dashboards
             icon: grafana.png
+        - Storage Docs:
+            href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/storage.md
+            description: Longhorn storage plan
+            icon: github.png
 
     - Documentation:
         - Architecture:
@@ -83,6 +87,9 @@ data:
         - Grafana:
             - abbr: Graf
               href: https://grafana.com/docs/
+        - Longhorn:
+            - abbr: LH
+              href: https://longhorn.io/docs/
 
   widgets.yaml: |
     - resources:
