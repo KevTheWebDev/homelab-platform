@@ -7,6 +7,7 @@ metadata:
     app: test-nginx
 spec:
   type: LoadBalancer
+  externalTrafficPolicy: Local
   selector:
     app: test-nginx
   ports:
