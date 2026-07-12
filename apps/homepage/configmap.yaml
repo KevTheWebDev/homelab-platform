@@ -90,3 +90,9 @@ data:
 
   docker.yaml: |
     # Docker integration intentionally disabled.
+
+  proxmox.yaml: |
+    # Proxmox integration intentionally disabled for now.
+
+  proxmox.json: |
+    {}
