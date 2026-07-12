@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage-config
+  namespace: homepage
+data:
+  settings.yaml: |
+    title: Kevin's Homelab
+    description: Proxmox + K3s GitOps homelab platform
+    theme: dark
+    color: slate
+    layout:
+      Platform:
+        style: row
+        columns: 4
+      Kubernetes:
+        style: row
+        columns: 4
+      Documentation:
+        style: row
+        columns: 4
+
+  services.yaml: |
+    - Platform:
+        - Argo CD:
+            href: https://192.168.0.200
+            description: GitOps control plane
+            icon: argo-cd.png
+        - Proxmox pve1:
+            href: https://192.168.0.50:8006
+            description: Proxmox host
+            icon: proxmox.png
+        - GitHub Repo:
+            href: https://github.com/kevthewebdev/homelab-platform
+            description: Public homelab-platform repo
+            icon: github.png
+
+    - Kubernetes:
+        - Test Nginx:
+            href: http://192.168.0.202
+            description: First GitOps-deployed test app
+            icon: nginx.png
+        - Homepage:
+            href: http://192.168.0.203
+            description: Homelab dashboard
+            icon: homepage.png
+
+    - Documentation:
+        - Architecture:
+            href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/architecture.md
+            description: Platform architecture notes
+            icon: github.png
+        - Network Plan:
+            href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/network.md
+            description: Node and MetalLB IP plan
+            icon: github.png
+        - Runbook:
+            href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/runbook.md
+            description: Operational commands
+            icon: github.png
+
+  bookmarks.yaml: |
+    - Cloud Native:
+        - Kubernetes:
+            - abbr: K8s
+              href: https://kubernetes.io/docs/
+        - K3s:
+            - abbr: K3s
+              href: https://docs.k3s.io/
+        - Argo CD:
+            - abbr: Argo
+              href: https://argo-cd.readthedocs.io/
+        - MetalLB:
+            - abbr: MLB
+              href: https://metallb.io/
+
+  widgets.yaml: |
+    - resources:
+        backend: kubernetes
+        expanded: true
+        cpu: true
+        memory: true
+
+    - search:
+        provider: duckduckgo
+        target: _blank
+
+  kubernetes.yaml: |
+    mode: cluster
+
+  docker.yaml: |
+    # Docker integration intentionally disabled.
