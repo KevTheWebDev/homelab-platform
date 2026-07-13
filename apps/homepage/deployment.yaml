@@ -38,7 +38,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: HOMEPAGE_ALLOWED_HOSTS
-              value: "192.168.0.203,localhost,127.0.0.1"
+              value: "homepage.homelab.local,192.168.0.200,192.168.0.203,localhost,127.0.0.1"
           ports:
             - name: http
               containerPort: 3000
