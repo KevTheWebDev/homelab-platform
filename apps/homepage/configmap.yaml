@@ -44,6 +44,10 @@ data:
             href: http://homepage.homelab.local
             description: Homelab dashboard
             icon: homepage.png
+        - Homarr:
+            href: http://homarr.homelab.local
+            description: Alternate homelab dashboard
+            icon: homarr.png
         - Grafana:
             href: http://grafana.homelab.local
             description: Cluster metrics and dashboards
@@ -81,6 +85,10 @@ data:
         - Uptime Kuma Docs:
             href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/uptime-kuma.md
             description: Uptime monitoring notes
+            icon: github.png
+        - Homarr Docs:
+            href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/homarr.md
+            description: Alternate dashboard notes
             icon: github.png
 
   bookmarks.yaml: |

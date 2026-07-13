@@ -50,6 +50,7 @@ Traefik provides host-based HTTP routing for homelab services.
 Ingress routes currently include:
 
 - `homepage.homelab.local`
+- `homarr.homelab.local`
 - `nginx.homelab.local`
 - `grafana.homelab.local`
 - `uptime.homelab.local`
@@ -68,7 +69,6 @@ Persistent storage is provided by Longhorn, managed by Argo CD as the `longhorn`
 
 Planned platform additions:
 
-- Homarr as an alternate dashboard experience.
 - Network monitoring dashboards in Grafana.
 - TLS certificates for ingress-hosted apps.
 - Longhorn backup targets for persistent volumes.

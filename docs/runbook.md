@@ -57,6 +57,7 @@ After Pi-hole DNS records point ingress-hosted apps to Traefik's external IP, te
 ```powershell
 nslookup homepage.homelab.local
 curl.exe -I http://homepage.homelab.local
+curl.exe -I http://homarr.homelab.local
 curl.exe -I http://nginx.homelab.local
 curl.exe -I http://grafana.homelab.local
 curl.exe -I http://uptime.homelab.local
@@ -159,6 +160,7 @@ In Pi-hole, go to **Local DNS > DNS Records** and add:
 | `argocd.homelab.local` | 192.168.0.201 |
 | `nginx.homelab.local` | Traefik external IP |
 | `homepage.homelab.local` | Traefik external IP |
+| `homarr.homelab.local` | Traefik external IP |
 | `grafana.homelab.local` | Traefik external IP |
 | `uptime.homelab.local` | Traefik external IP |
 | `pihole.homelab.local` | 192.168.0.205 |
@@ -167,8 +169,37 @@ Then test from a client using Pi-hole DNS:
 
 ```powershell
 nslookup homepage.homelab.local
+nslookup homarr.homelab.local
 nslookup grafana.homelab.local
 nslookup uptime.homelab.local
+```
+
+## Create Homarr encryption secret
+
+Homarr requires a 64-character hexadecimal encryption key. Do not commit this key to Git.
+
+Create it before syncing the Homarr application:
+
+```powershell
+kubectl create namespace homarr
+$key = -join ((1..64) | ForEach-Object { "{0:x}" -f (Get-Random -Minimum 0 -Maximum 16) })
+kubectl create secret generic homarr-secret -n homarr --from-literal=SECRET_ENCRYPTION_KEY=$key
+```
+
+## Check Homarr
+
+```powershell
+kubectl get application homarr -n argocd
+kubectl get pods -n homarr
+kubectl get svc -n homarr
+kubectl get pvc -n homarr
+kubectl get ingress -n homarr
+```
+
+Homarr should be available at:
+
+```text
+http://homarr.homelab.local
 ```
 
 ## Check Uptime Kuma
@@ -196,6 +227,7 @@ Suggested monitors to create after first login:
 | Argo CD | HTTP(s) | `https://argocd.homelab.local` |
 | Pi-hole Web | HTTP(s) | `http://pihole.homelab.local/admin` |
 | Pi-hole DNS | DNS | `example.com` using resolver `192.168.0.205` |
+| Homarr | HTTP(s) | `http://homarr.homelab.local` |
 
 ## Access Argo CD
 
