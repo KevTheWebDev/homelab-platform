@@ -63,6 +63,7 @@ Point these Pi-hole DNS records to Traefik's external IP:
 | `homepage.homelab.local` | Homepage |
 | `nginx.homelab.local` | Test Nginx |
 | `grafana.homelab.local` | Grafana |
+| `uptime.homelab.local` | Uptime Kuma |
 
 Keep these records on their dedicated service IPs:
 

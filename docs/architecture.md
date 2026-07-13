@@ -52,6 +52,7 @@ Ingress routes currently include:
 - `homepage.homelab.local`
 - `nginx.homelab.local`
 - `grafana.homelab.local`
+- `uptime.homelab.local`
 
 Most browser-based apps use internal ClusterIP services behind Traefik instead of consuming their own MetalLB addresses.
 
@@ -68,7 +69,6 @@ Persistent storage is provided by Longhorn, managed by Argo CD as the `longhorn`
 Planned platform additions:
 
 - Homarr as an alternate dashboard experience.
-- Uptime Kuma for service uptime checks and status visibility.
 - Network monitoring dashboards in Grafana.
 - TLS certificates for ingress-hosted apps.
 - Longhorn backup targets for persistent volumes.

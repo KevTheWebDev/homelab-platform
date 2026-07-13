@@ -13,8 +13,13 @@ This roadmap tracks planned platform additions that make the homelab more useful
 | App | Purpose | Notes |
 |---|---|---|
 | Homarr | Alternate dashboard and service launcher | Compare with Homepage before deciding which becomes primary. |
-| Uptime Kuma | Uptime checks and status visibility | Good candidate for Longhorn-backed persistent storage. |
 | Grafana network monitoring | Router, DNS, node, and service visibility | Add dashboards after metrics sources are chosen. |
+
+## Completed apps
+
+| App | Purpose | Notes |
+|---|---|---|
+| Uptime Kuma | Uptime checks and status visibility | Longhorn-backed and exposed through Traefik ingress. |
 
 ## Platform improvements
 

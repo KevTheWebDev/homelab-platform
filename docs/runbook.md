@@ -59,6 +59,7 @@ nslookup homepage.homelab.local
 curl.exe -I http://homepage.homelab.local
 curl.exe -I http://nginx.homelab.local
 curl.exe -I http://grafana.homelab.local
+curl.exe -I http://uptime.homelab.local
 ```
 
 If an ingress route fails, first verify Traefik's LoadBalancer IP, service policy, and endpoints before changing individual applications.
@@ -159,6 +160,7 @@ In Pi-hole, go to **Local DNS > DNS Records** and add:
 | `nginx.homelab.local` | Traefik external IP |
 | `homepage.homelab.local` | Traefik external IP |
 | `grafana.homelab.local` | Traefik external IP |
+| `uptime.homelab.local` | Traefik external IP |
 | `pihole.homelab.local` | 192.168.0.205 |
 
 Then test from a client using Pi-hole DNS:
@@ -166,7 +168,34 @@ Then test from a client using Pi-hole DNS:
 ```powershell
 nslookup homepage.homelab.local
 nslookup grafana.homelab.local
+nslookup uptime.homelab.local
 ```
+
+## Check Uptime Kuma
+
+```powershell
+kubectl get application uptime-kuma -n argocd
+kubectl get pods -n uptime-kuma
+kubectl get svc -n uptime-kuma
+kubectl get pvc -n uptime-kuma
+kubectl get ingress -n uptime-kuma
+```
+
+Uptime Kuma should be available at:
+
+```text
+http://uptime.homelab.local
+```
+
+Suggested monitors to create after first login:
+
+| Monitor | Type | Target |
+|---|---|---|
+| Homepage | HTTP(s) | `http://homepage.homelab.local` |
+| Grafana | HTTP(s) | `http://grafana.homelab.local/login` |
+| Argo CD | HTTP(s) | `https://argocd.homelab.local` |
+| Pi-hole Web | HTTP(s) | `http://pihole.homelab.local/admin` |
+| Pi-hole DNS | DNS | `example.com` using resolver `192.168.0.205` |
 
 ## Access Argo CD
 

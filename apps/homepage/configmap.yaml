@@ -48,6 +48,10 @@ data:
             href: http://grafana.homelab.local
             description: Cluster metrics and dashboards
             icon: grafana.png
+        - Uptime Kuma:
+            href: http://uptime.homelab.local
+            description: Service uptime checks
+            icon: uptime-kuma.png
         - Pi-hole:
             href: http://pihole.homelab.local/admin
             description: Homelab DNS and ad blocking
@@ -73,6 +77,10 @@ data:
         - Pi-hole Docs:
             href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/pihole.md
             description: DNS service notes
+            icon: github.png
+        - Uptime Kuma Docs:
+            href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/uptime-kuma.md
+            description: Uptime monitoring notes
             icon: github.png
 
   bookmarks.yaml: |
