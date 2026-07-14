@@ -45,6 +45,7 @@ Monitoring is provided by the `kube-prometheus-stack` Helm chart, managed by Arg
 - Grafana provides dashboards at `http://grafana.homelab.local`.
 - Grafana credentials are stored in a Kubernetes Secret named `grafana-admin` in the `monitoring` namespace. The secret is intentionally not committed to Git.
 - Prometheus alert rules detect node readiness, node-exporter scrape failures, pod crash loops, unavailable deployments, PVC failures, Kubernetes API scrape failures, and Argo CD app drift.
+- Blackbox Exporter probes LAN, Proxmox, K3s node, ingress, DNS, and API endpoints using ICMP and TCP checks.
 - Uptime Kuma provides synthetic checks for service URLs, DNS, Proxmox host reachability, and K3s VM reachability.
 
 Incident response procedures are documented in `docs/incident-response.md`.

@@ -10,6 +10,7 @@ The goal is not only to know that something is down, but to preserve enough evid
 |---|---|---|
 | Synthetic checks | Uptime Kuma | Detect whether services, DNS, Proxmox hosts, and K3s nodes are reachable from the cluster network. |
 | Kubernetes metrics | Prometheus / kube-prometheus-stack | Detect node readiness, pod crashes, unavailable deployments, PVC failures, and scrape failures. |
+| Network probes | Blackbox Exporter | Detect LAN, Proxmox, K3s node, ingress, DNS, and API endpoint reachability. |
 | Dashboards | Grafana | Visualize node, pod, storage, and service trends before/during/after incidents. |
 | GitOps state | Argo CD | Detect whether live cluster state matches Git. |
 | Storage state | Longhorn | Detect unhealthy volumes, detached volumes, and replica issues. |
@@ -68,8 +69,15 @@ When an alert fires:
 1. Write down the alert name, time, affected target, and current symptoms.
 2. Check Uptime Kuma for the first failed check and failure duration.
 3. Check Grafana for node CPU, memory, disk, network, and pod restart spikes.
-4. Check Argo CD for app sync/health status.
-5. Check Kubernetes state:
+4. Check Blackbox Exporter probe status in Grafana:
+
+```promql
+probe_success{job=~"homelab-icmp|homelab-tcp"}
+probe_duration_seconds{job=~"homelab-icmp|homelab-tcp"}
+```
+
+5. Check Argo CD for app sync/health status.
+6. Check Kubernetes state:
 
 ```powershell
 kubectl get nodes -o wide
@@ -78,7 +86,7 @@ kubectl get events -A --sort-by=.lastTimestamp
 kubectl get applications -n argocd
 ```
 
-6. If a node is affected, check the node directly:
+7. If a node is affected, check the node directly:
 
 ```bash
 hostname
@@ -90,7 +98,7 @@ systemctl status k3s --no-pager
 journalctl -u k3s -n 100 --no-pager
 ```
 
-7. If a Proxmox host is affected, check from its console:
+8. If a Proxmox host is affected, check from its console:
 
 ```bash
 hostname

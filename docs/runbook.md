@@ -43,6 +43,7 @@ kubectl create secret generic grafana-admin -n monitoring --from-literal=admin-u
 
 ```powershell
 kubectl get application monitoring -n argocd
+kubectl get application blackbox-exporter -n argocd
 kubectl get pods -n monitoring
 kubectl get svc -n monitoring
 kubectl get prometheusrules -n monitoring
@@ -68,6 +69,30 @@ http://localhost:9093
 ```
 
 Prometheus alert rules are managed by the `monitoring` Argo CD application.
+
+## Check network probes
+
+Blackbox Exporter provides ICMP and TCP network probes for Grafana and Prometheus alerts.
+
+```powershell
+kubectl get application blackbox-exporter -n argocd
+kubectl get pods -n monitoring -l app=blackbox-exporter
+kubectl get svc -n monitoring blackbox-exporter
+kubectl port-forward -n monitoring svc/blackbox-exporter 9115:9115
+```
+
+Then test a probe locally:
+
+```text
+http://localhost:9115/probe?module=tcp_connect&target=192.168.0.52:8006
+```
+
+Useful Grafana PromQL queries:
+
+```promql
+probe_success{job=~"homelab-icmp|homelab-tcp"}
+probe_duration_seconds{job=~"homelab-icmp|homelab-tcp"}
+```
 
 ## Incident response
 
