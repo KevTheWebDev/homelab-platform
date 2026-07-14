@@ -7,6 +7,8 @@ This roadmap tracks planned platform additions that make the homelab more useful
 - Ingress consolidation with Traefik host-based routes.
 - Keep Pi-hole as the local DNS source of truth for `homelab.local`.
 - Keep dedicated LoadBalancer IPs during ingress testing, then remove them once routes are stable.
+- Configure Uptime Kuma notifications for critical service, VM, DNS, and Proxmox host failures.
+- Add persistent log aggregation for root-cause analysis.
 
 ## Planned apps
 
@@ -27,3 +29,4 @@ This roadmap tracks planned platform additions that make the homelab more useful
 - Add Longhorn backup targets.
 - Add external-dns or a GitOps-managed DNS strategy if Pi-hole records become tedious to maintain manually.
 - Add alerting rules for node health, disk pressure, failed pods, and DNS availability.
+- Add Loki/Grafana Alloy or another log pipeline so incident evidence survives pod and node restarts.

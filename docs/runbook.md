@@ -22,6 +22,14 @@ kubectl get pods -n argocd
 kubectl get svc -n argocd argocd-server
 ```
 
+Argo CD should use `externalTrafficPolicy: Local` in this environment. That setting is managed by the `argocd-config` Argo CD application.
+
+```powershell
+kubectl get application argocd-config -n argocd
+kubectl describe svc -n argocd argocd-server
+curl.exe -k -I https://argocd.homelab.local
+```
+
 ## Create Grafana admin secret
 
 Grafana credentials are not committed to Git. Create the secret before syncing the monitoring application:
@@ -37,12 +45,41 @@ kubectl create secret generic grafana-admin -n monitoring --from-literal=admin-u
 kubectl get application monitoring -n argocd
 kubectl get pods -n monitoring
 kubectl get svc -n monitoring
+kubectl get prometheusrules -n monitoring
 ```
 
 Grafana should be available at:
 
 ```text
 http://grafana.homelab.local
+```
+
+## Check active alerts
+
+```powershell
+kubectl get prometheusrules -n monitoring
+kubectl port-forward -n monitoring svc/kube-prometheus-stack-alertmanager 9093:9093
+```
+
+Then open:
+
+```text
+http://localhost:9093
+```
+
+Prometheus alert rules are managed by the `monitoring` Argo CD application.
+
+## Incident response
+
+Use [incident-response.md](./incident-response.md) whenever a service, VM, K3s node, Proxmox host, or network endpoint becomes unreachable.
+
+Start with:
+
+```powershell
+kubectl get nodes -o wide
+kubectl get pods -A -o wide
+kubectl get events -A --sort-by=.lastTimestamp
+kubectl get applications -n argocd
 ```
 
 ## Check ingress

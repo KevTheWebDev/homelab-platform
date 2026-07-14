@@ -50,6 +50,8 @@ Pi-hole should keep its dedicated LoadBalancer IP because it serves DNS on port 
 
 Argo CD should stay on its dedicated LoadBalancer IP for now because its HTTPS and API behavior is more sensitive than simple HTTP apps.
 
+Argo CD uses `externalTrafficPolicy: Local` so MetalLB announces `192.168.0.201` from the node that has a local `argocd-server` endpoint.
+
 Check the current Traefik ingress IP with:
 
 ```powershell

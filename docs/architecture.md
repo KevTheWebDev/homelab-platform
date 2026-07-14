@@ -35,6 +35,8 @@ Edit manifests
   -> Kubernetes updates the cluster
 ```
 
+The existing Argo CD installation is partially managed by the `argocd-config` application for local service settings such as `externalTrafficPolicy: Local`.
+
 ## Observability
 
 Monitoring is provided by the `kube-prometheus-stack` Helm chart, managed by Argo CD as the `monitoring` application.
@@ -42,6 +44,10 @@ Monitoring is provided by the `kube-prometheus-stack` Helm chart, managed by Arg
 - Prometheus collects Kubernetes and node metrics.
 - Grafana provides dashboards at `http://grafana.homelab.local`.
 - Grafana credentials are stored in a Kubernetes Secret named `grafana-admin` in the `monitoring` namespace. The secret is intentionally not committed to Git.
+- Prometheus alert rules detect node readiness, node-exporter scrape failures, pod crash loops, unavailable deployments, PVC failures, Kubernetes API scrape failures, and Argo CD app drift.
+- Uptime Kuma provides synthetic checks for service URLs, DNS, Proxmox host reachability, and K3s VM reachability.
+
+Incident response procedures are documented in `docs/incident-response.md`.
 
 ## Ingress
 

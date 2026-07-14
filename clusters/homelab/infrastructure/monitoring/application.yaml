@@ -55,6 +55,91 @@ spec:
         prometheus-node-exporter:
           tolerations:
             - operator: Exists
+
+        additionalPrometheusRulesMap:
+          homelab-platform-alerts:
+            groups:
+              - name: homelab.platform
+                rules:
+                  - alert: HomelabNodeNotReady
+                    expr: kube_node_status_condition{condition="Ready",status="true"} == 0
+                    for: 5m
+                    labels:
+                      severity: critical
+                      category: node
+                    annotations:
+                      summary: "Kubernetes node is not Ready"
+                      description: "Node {{ $labels.node }} has not been Ready for at least 5 minutes."
+
+                  - alert: HomelabNodeExporterDown
+                    expr: up{job="kube-prometheus-stack-prometheus-node-exporter"} == 0
+                    for: 5m
+                    labels:
+                      severity: critical
+                      category: node
+                    annotations:
+                      summary: "Node exporter target is down"
+                      description: "Prometheus cannot scrape node-exporter on {{ $labels.instance }} for at least 5 minutes."
+
+                  - alert: HomelabPodCrashLooping
+                    expr: max_over_time(kube_pod_container_status_waiting_reason{reason="CrashLoopBackOff"}[10m]) >= 1
+                    for: 5m
+                    labels:
+                      severity: warning
+                      category: workload
+                    annotations:
+                      summary: "Pod is crash looping"
+                      description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} container {{ $labels.container }} is in CrashLoopBackOff."
+
+                  - alert: HomelabDeploymentUnavailable
+                    expr: kube_deployment_status_replicas_unavailable > 0
+                    for: 10m
+                    labels:
+                      severity: warning
+                      category: workload
+                    annotations:
+                      summary: "Deployment has unavailable replicas"
+                      description: "Deployment {{ $labels.namespace }}/{{ $labels.deployment }} has {{ $value }} unavailable replica(s)."
+
+                  - alert: HomelabPersistentVolumeClaimPending
+                    expr: kube_persistentvolumeclaim_status_phase{phase="Pending"} == 1
+                    for: 10m
+                    labels:
+                      severity: warning
+                      category: storage
+                    annotations:
+                      summary: "PVC is pending"
+                      description: "PVC {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} has been Pending for at least 10 minutes."
+
+                  - alert: HomelabPersistentVolumeClaimLost
+                    expr: kube_persistentvolumeclaim_status_phase{phase="Lost"} == 1
+                    for: 1m
+                    labels:
+                      severity: critical
+                      category: storage
+                    annotations:
+                      summary: "PVC is lost"
+                      description: "PVC {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is Lost."
+
+                  - alert: HomelabKubeAPITargetDown
+                    expr: up{job="apiserver"} == 0
+                    for: 2m
+                    labels:
+                      severity: critical
+                      category: control-plane
+                    annotations:
+                      summary: "Kubernetes API scrape target is down"
+                      description: "Prometheus cannot scrape a Kubernetes API target at {{ $labels.instance }}."
+
+                  - alert: HomelabArgocdAppOutOfSync
+                    expr: argocd_app_info{sync_status!="Synced"} == 1
+                    for: 15m
+                    labels:
+                      severity: warning
+                      category: gitops
+                    annotations:
+                      summary: "Argo CD application is out of sync"
+                      description: "Argo CD app {{ $labels.name }} is {{ $labels.sync_status }} for at least 15 minutes."
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
