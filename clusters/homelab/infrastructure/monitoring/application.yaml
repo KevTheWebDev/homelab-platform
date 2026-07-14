@@ -41,6 +41,163 @@ spec:
             nodeSelector:
               kubernetes.io/hostname: k3s-04
             storageSpec: {}
+            additionalScrapeConfigs:
+              - job_name: homelab-icmp
+                metrics_path: /probe
+                params:
+                  module:
+                    - icmp
+                static_configs:
+                  - targets:
+                      - 192.168.0.1
+                    labels:
+                      target_name: gateway
+                      target_type: network
+                  - targets:
+                      - 192.168.0.50
+                    labels:
+                      target_name: proxmox-pve1
+                      target_type: proxmox
+                  - targets:
+                      - 192.168.0.52
+                    labels:
+                      target_name: proxmox-masternode
+                      target_type: proxmox
+                  - targets:
+                      - 192.168.0.121
+                    labels:
+                      target_name: k3s-01
+                      target_type: k3s-node
+                  - targets:
+                      - 192.168.0.122
+                    labels:
+                      target_name: k3s-02
+                      target_type: k3s-node
+                  - targets:
+                      - 192.168.0.123
+                    labels:
+                      target_name: k3s-03
+                      target_type: k3s-node
+                  - targets:
+                      - 192.168.0.124
+                    labels:
+                      target_name: k3s-04
+                      target_type: k3s-node
+                  - targets:
+                      - 192.168.0.125
+                    labels:
+                      target_name: k3s-05
+                      target_type: k3s-node
+                  - targets:
+                      - 192.168.0.126
+                    labels:
+                      target_name: k3s-06
+                      target_type: k3s-node
+                  - targets:
+                      - 192.168.0.200
+                    labels:
+                      target_name: traefik-ingress
+                      target_type: loadbalancer
+                  - targets:
+                      - 192.168.0.201
+                    labels:
+                      target_name: argocd
+                      target_type: loadbalancer
+                  - targets:
+                      - 192.168.0.205
+                    labels:
+                      target_name: pihole
+                      target_type: dns
+                relabel_configs:
+                  - source_labels:
+                      - __address__
+                    target_label: __param_target
+                  - source_labels:
+                      - __param_target
+                    target_label: instance
+                  - target_label: __address__
+                    replacement: blackbox-exporter.monitoring.svc.cluster.local:9115
+
+              - job_name: homelab-tcp
+                metrics_path: /probe
+                params:
+                  module:
+                    - tcp_connect
+                static_configs:
+                  - targets:
+                      - 192.168.0.50:8006
+                    labels:
+                      target_name: proxmox-pve1-web
+                      target_type: proxmox
+                  - targets:
+                      - 192.168.0.52:8006
+                    labels:
+                      target_name: proxmox-masternode-web
+                      target_type: proxmox
+                  - targets:
+                      - 192.168.0.52:22
+                    labels:
+                      target_name: proxmox-masternode-ssh
+                      target_type: proxmox
+                  - targets:
+                      - 192.168.0.121:6443
+                    labels:
+                      target_name: k3s-api
+                      target_type: control-plane
+                  - targets:
+                      - 192.168.0.200:80
+                    labels:
+                      target_name: traefik-web
+                      target_type: ingress
+                  - targets:
+                      - 192.168.0.201:443
+                    labels:
+                      target_name: argocd-https
+                      target_type: gitops
+                  - targets:
+                      - 192.168.0.205:53
+                    labels:
+                      target_name: pihole-dns-tcp
+                      target_type: dns
+                  - targets:
+                      - 192.168.0.121:22
+                    labels:
+                      target_name: k3s-01-ssh
+                      target_type: k3s-node
+                  - targets:
+                      - 192.168.0.122:22
+                    labels:
+                      target_name: k3s-02-ssh
+                      target_type: k3s-node
+                  - targets:
+                      - 192.168.0.123:22
+                    labels:
+                      target_name: k3s-03-ssh
+                      target_type: k3s-node
+                  - targets:
+                      - 192.168.0.124:22
+                    labels:
+                      target_name: k3s-04-ssh
+                      target_type: k3s-node
+                  - targets:
+                      - 192.168.0.125:22
+                    labels:
+                      target_name: k3s-05-ssh
+                      target_type: k3s-node
+                  - targets:
+                      - 192.168.0.126:22
+                    labels:
+                      target_name: k3s-06-ssh
+                      target_type: k3s-node
+                relabel_configs:
+                  - source_labels:
+                      - __address__
+                    target_label: __param_target
+                  - source_labels:
+                      - __param_target
+                    target_label: instance
+                  - target_label: __address__
+                    replacement: blackbox-exporter.monitoring.svc.cluster.local:9115
 
         alertmanager:
           alertmanagerSpec:
@@ -140,6 +297,26 @@ spec:
                     annotations:
                       summary: "Argo CD application is out of sync"
                       description: "Argo CD app {{ $labels.name }} is {{ $labels.sync_status }} for at least 15 minutes."
+
+                  - alert: HomelabNetworkProbeFailed
+                    expr: probe_success{job=~"homelab-icmp|homelab-tcp"} == 0
+                    for: 2m
+                    labels:
+                      severity: critical
+                      category: network
+                    annotations:
+                      summary: "Network probe failed"
+                      description: "{{ $labels.target_name }} probe failed for target {{ $labels.instance }}."
+
+                  - alert: HomelabNetworkLatencyHigh
+                    expr: probe_duration_seconds{job="homelab-icmp"} > 0.1
+                    for: 5m
+                    labels:
+                      severity: warning
+                      category: network
+                    annotations:
+                      summary: "Network probe latency is high"
+                      description: "{{ $labels.target_name }} ICMP probe latency is above 100ms for at least 5 minutes."
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
