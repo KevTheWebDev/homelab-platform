@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-ssh-login-attempts
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  ssh-login-attempts.json: |
+    {
+      "title": "SSH Login Attempts",
+      "uid": "ssh-login-attempts",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "30s",
+      "tags": ["homelab", "ssh", "security"],
+      "time": {
+        "from": "now-24h",
+        "to": "now"
+      },
+      "templating": {
+        "list": [
+          {
+            "name": "host",
+            "type": "query",
+            "datasource": {
+              "type": "loki",
+              "uid": "Loki"
+            },
+            "query": "label_values({job=\"ssh-auth\"}, host)",
+            "refresh": 1,
+            "includeAll": true,
+            "multi": true
+          }
+        ]
+      },
+      "panels": [
+        {
+          "type": "stat",
+          "title": "Failed SSH logins - 24h",
+          "gridPos": { "h": 6, "w": 8, "x": 0, "y": 0 },
+          "targets": [
+            {
+              "datasource": { "type": "loki", "uid": "Loki" },
+              "expr": "sum(count_over_time({job=\"ssh-auth\", host=~\"$host\"} |~ \"Failed password|Invalid user|authentication failure\" [24h]))",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "type": "stat",
+          "title": "Accepted SSH logins - 24h",
+          "gridPos": { "h": 6, "w": 8, "x": 8, "y": 0 },
+          "targets": [
+            {
+              "datasource": { "type": "loki", "uid": "Loki" },
+              "expr": "sum(count_over_time({job=\"ssh-auth\", host=~\"$host\"} |~ \"Accepted password|Accepted publickey\" [24h]))",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "type": "timeseries",
+          "title": "Failed SSH attempts over time",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+          "targets": [
+            {
+              "datasource": { "type": "loki", "uid": "Loki" },
+              "expr": "sum by (host) (count_over_time({job=\"ssh-auth\", host=~\"$host\"} |~ \"Failed password|Invalid user|authentication failure\" [5m]))",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "type": "timeseries",
+          "title": "Accepted SSH logins over time",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+          "targets": [
+            {
+              "datasource": { "type": "loki", "uid": "Loki" },
+              "expr": "sum by (host) (count_over_time({job=\"ssh-auth\", host=~\"$host\"} |~ \"Accepted password|Accepted publickey\" [5m]))",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "type": "logs",
+          "title": "Recent SSH auth log events",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 14 },
+          "targets": [
+            {
+              "datasource": { "type": "loki", "uid": "Loki" },
+              "expr": "{job=\"ssh-auth\", host=~\"$host\"} |~ \"sshd|Failed password|Invalid user|Accepted password|Accepted publickey|authentication failure\"",
+              "refId": "A"
+            }
+          ]
+        }
+      ]
+    }

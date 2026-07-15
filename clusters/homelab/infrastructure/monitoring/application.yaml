@@ -32,6 +32,18 @@ spec:
             path: /
           persistence:
             enabled: false
+          sidecar:
+            dashboards:
+              enabled: true
+              label: grafana_dashboard
+              searchNamespace: monitoring
+          additionalDataSources:
+            - name: Loki
+              uid: Loki
+              type: loki
+              access: proxy
+              url: http://loki.monitoring.svc.cluster.local:3100
+              isDefault: false
 
         prometheus:
           prometheusSpec:

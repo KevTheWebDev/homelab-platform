@@ -94,6 +94,19 @@ probe_success{job=~"homelab-icmp|homelab-tcp"}
 probe_duration_seconds{job=~"homelab-icmp|homelab-tcp"}
 ```
 
+## Check SSH login monitoring
+
+```powershell
+kubectl get application loki -n argocd
+kubectl get application alloy -n argocd
+kubectl get application grafana-dashboards -n argocd
+kubectl get pods -n monitoring -l app=loki
+kubectl get pods -n monitoring -l app=alloy
+kubectl get configmap -n monitoring grafana-dashboard-ssh-login-attempts
+```
+
+In Grafana, use the Loki datasource and open the `SSH Login Attempts` dashboard.
+
 ## Incident response
 
 Use [incident-response.md](./incident-response.md) whenever a service, VM, K3s node, Proxmox host, or network endpoint becomes unreachable.
