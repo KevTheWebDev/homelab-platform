@@ -11,7 +11,7 @@ data:
       "title": "SSH Login Attempts",
       "uid": "ssh-login-attempts",
       "schemaVersion": 39,
-      "version": 1,
+      "version": 2,
       "refresh": "30s",
       "tags": ["homelab", "ssh", "security"],
       "time": {
@@ -29,6 +29,7 @@ data:
             },
             "query": "label_values({job=\"ssh-auth\"}, host)",
             "refresh": 1,
+            "allValue": ".*",
             "includeAll": true,
             "multi": true
           }
@@ -42,7 +43,7 @@ data:
           "targets": [
             {
               "datasource": { "type": "loki", "uid": "Loki" },
-              "expr": "sum(count_over_time({job=\"ssh-auth\", host=~\"$host\"} |~ \"Failed password|Invalid user|authentication failure\" [24h]))",
+              "expr": "sum(count_over_time({job=\"ssh-auth\", host=~\"${host:regex}\"} |~ \"Failed password|Invalid user|authentication failure|Failed keyboard-interactive\" [24h]))",
               "refId": "A"
             }
           ]
@@ -54,7 +55,19 @@ data:
           "targets": [
             {
               "datasource": { "type": "loki", "uid": "Loki" },
-              "expr": "sum(count_over_time({job=\"ssh-auth\", host=~\"$host\"} |~ \"Accepted password|Accepted publickey\" [24h]))",
+              "expr": "sum(count_over_time({job=\"ssh-auth\", host=~\"${host:regex}\"} |~ \"Accepted password|Accepted publickey|Accepted keyboard-interactive\" [24h]))",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "type": "stat",
+          "title": "SSH connection events - 24h",
+          "gridPos": { "h": 6, "w": 8, "x": 16, "y": 0 },
+          "targets": [
+            {
+              "datasource": { "type": "loki", "uid": "Loki" },
+              "expr": "sum(count_over_time({job=\"ssh-auth\", host=~\"${host:regex}\"} |~ \"sshd|sshd-session\" [24h]))",
               "refId": "A"
             }
           ]
@@ -66,7 +79,7 @@ data:
           "targets": [
             {
               "datasource": { "type": "loki", "uid": "Loki" },
-              "expr": "sum by (host) (count_over_time({job=\"ssh-auth\", host=~\"$host\"} |~ \"Failed password|Invalid user|authentication failure\" [5m]))",
+              "expr": "sum by (host) (count_over_time({job=\"ssh-auth\", host=~\"${host:regex}\"} |~ \"Failed password|Invalid user|authentication failure|Failed keyboard-interactive\" [5m]))",
               "refId": "A"
             }
           ]
@@ -78,7 +91,19 @@ data:
           "targets": [
             {
               "datasource": { "type": "loki", "uid": "Loki" },
-              "expr": "sum by (host) (count_over_time({job=\"ssh-auth\", host=~\"$host\"} |~ \"Accepted password|Accepted publickey\" [5m]))",
+              "expr": "sum by (host) (count_over_time({job=\"ssh-auth\", host=~\"${host:regex}\"} |~ \"Accepted password|Accepted publickey|Accepted keyboard-interactive\" [5m]))",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "type": "timeseries",
+          "title": "SSH connection events over time",
+          "gridPos": { "h": 8, "w": 24, "x": 0, "y": 14 },
+          "targets": [
+            {
+              "datasource": { "type": "loki", "uid": "Loki" },
+              "expr": "sum by (host) (count_over_time({job=\"ssh-auth\", host=~\"${host:regex}\"} |~ \"sshd|sshd-session\" [5m]))",
               "refId": "A"
             }
           ]
@@ -86,11 +111,11 @@ data:
         {
           "type": "logs",
           "title": "Recent SSH auth log events",
-          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 14 },
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 22 },
           "targets": [
             {
               "datasource": { "type": "loki", "uid": "Loki" },
-              "expr": "{job=\"ssh-auth\", host=~\"$host\"} |~ \"sshd|Failed password|Invalid user|Accepted password|Accepted publickey|authentication failure\"",
+              "expr": "{job=\"ssh-auth\", host=~\"${host:regex}\"} |~ \"sshd|sshd-session|Failed password|Invalid user|Accepted password|Accepted publickey|authentication failure|Connection closed\"",
               "refId": "A"
             }
           ]
