@@ -35,6 +35,7 @@ It uses:
 | Argo CD | HTTP(s) | `https://argocd.homelab.local` |
 | Pi-hole Web | HTTP(s) | `http://pihole.homelab.local/admin` |
 | Pi-hole DNS | DNS | `example.com` using resolver `192.168.0.205` |
+| n8n | HTTP(s) | `http://n8n.homelab.local` |
 | Test Nginx | HTTP(s) | `http://nginx.homelab.local` |
 
 ## Operations

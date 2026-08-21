@@ -62,6 +62,7 @@ Ingress routes currently include:
 - `nginx.homelab.local`
 - `grafana.homelab.local`
 - `uptime.homelab.local`
+- `n8n.homelab.local`
 
 Most browser-based apps use internal ClusterIP services behind Traefik instead of consuming their own MetalLB addresses.
 
@@ -78,5 +79,6 @@ Persistent storage is provided by Longhorn, managed by Argo CD as the `longhorn`
 Planned platform additions:
 
 - Network monitoring dashboards in Grafana.
+- Workflow automation with n8n.
 - TLS certificates for ingress-hosted apps.
 - Longhorn backup targets for persistent volumes.

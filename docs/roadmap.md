@@ -22,6 +22,7 @@ This roadmap tracks planned platform additions that make the homelab more useful
 |---|---|---|
 | Uptime Kuma | Uptime checks and status visibility | Longhorn-backed and exposed through Traefik ingress. |
 | Homarr | Alternate dashboard and service launcher | Longhorn-backed and exposed through Traefik ingress. |
+| n8n | Workflow automation | PostgreSQL-backed, Longhorn-backed, scheduled on `k3s-05`, and exposed through Traefik ingress. |
 
 ## Platform improvements
 

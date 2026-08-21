@@ -136,6 +136,7 @@ curl.exe -I http://homarr.homelab.local
 curl.exe -I http://nginx.homelab.local
 curl.exe -I http://grafana.homelab.local
 curl.exe -I http://uptime.homelab.local
+curl.exe -I http://n8n.homelab.local
 ```
 
 If an ingress route fails, first verify Traefik's LoadBalancer IP, service policy, and endpoints before changing individual applications.
@@ -238,6 +239,7 @@ In Pi-hole, go to **Local DNS > DNS Records** and add:
 | `homarr.homelab.local` | Traefik external IP |
 | `grafana.homelab.local` | Traefik external IP |
 | `uptime.homelab.local` | Traefik external IP |
+| `n8n.homelab.local` | Traefik external IP |
 | `pihole.homelab.local` | 192.168.0.205 |
 
 Then test from a client using Pi-hole DNS:
@@ -247,6 +249,7 @@ nslookup homepage.homelab.local
 nslookup homarr.homelab.local
 nslookup grafana.homelab.local
 nslookup uptime.homelab.local
+nslookup n8n.homelab.local
 ```
 
 ## Create Homarr encryption secret
@@ -277,6 +280,37 @@ Homarr should be available at:
 http://homarr.homelab.local
 ```
 
+## Create n8n secrets
+
+n8n credentials and encryption keys are not committed to Git. Create the secret before syncing the n8n application:
+
+```powershell
+kubectl create namespace n8n
+
+$postgresPassword = -join ((1..48) | ForEach-Object { "{0:x}" -f (Get-Random -Minimum 0 -Maximum 16) })
+$encryptionKey = -join ((1..64) | ForEach-Object { "{0:x}" -f (Get-Random -Minimum 0 -Maximum 16) })
+
+kubectl create secret generic n8n-secret -n n8n `
+  --from-literal=POSTGRES_PASSWORD=$postgresPassword `
+  --from-literal=N8N_ENCRYPTION_KEY=$encryptionKey
+```
+
+## Check n8n
+
+```powershell
+kubectl get application n8n -n argocd
+kubectl get pods -n n8n -o wide
+kubectl get svc -n n8n
+kubectl get pvc -n n8n
+kubectl get ingress -n n8n
+```
+
+n8n should be available at:
+
+```text
+http://n8n.homelab.local
+```
+
 ## Check Uptime Kuma
 
 ```powershell
@@ -303,6 +337,7 @@ Suggested monitors to create after first login:
 | Pi-hole Web | HTTP(s) | `http://pihole.homelab.local/admin` |
 | Pi-hole DNS | DNS | `example.com` using resolver `192.168.0.205` |
 | Homarr | HTTP(s) | `http://homarr.homelab.local` |
+| n8n | HTTP(s) | `http://n8n.homelab.local` |
 
 ## Access Argo CD
 

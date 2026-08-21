@@ -60,6 +60,10 @@ data:
             href: http://pihole.homelab.local/admin
             description: Homelab DNS and ad blocking
             icon: pi-hole.png
+        - n8n:
+            href: http://n8n.homelab.local
+            description: Workflow automation platform
+            icon: n8n.png
         - Storage Docs:
             href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/storage.md
             description: Longhorn storage plan
@@ -89,6 +93,10 @@ data:
         - Homarr Docs:
             href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/homarr.md
             description: Alternate dashboard notes
+            icon: github.png
+        - n8n Docs:
+            href: https://github.com/kevthewebdev/homelab-platform/blob/main/docs/n8n.md
+            description: Workflow automation notes
             icon: github.png
 
   bookmarks.yaml: |
